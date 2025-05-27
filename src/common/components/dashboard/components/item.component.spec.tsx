@@ -1,6 +1,6 @@
 import React from 'react';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { renderWithRouter } from '#common/test';
 import { Route } from 'react-router-dom';
 import { ItemComponent, ClassesProps } from './item.component';
@@ -20,14 +20,18 @@ describe('common/dashboard/ItemComponent', () => {
 
     // Act
     const { getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
+      null,
       <>
+        <Route path="/" element={<ItemComponent {...props} />} />
         <Route
           path={props.item.linkTo}
           element={<h1>Test route destination</h1>}
         />
       </>
     );
+
+    // Debug
+    // screen.debug(); // Descomenta para inspeccionar el DOM si falla
 
     // Assert
     expect(getByText(props.item.title)).toBeInTheDocument();
@@ -52,9 +56,10 @@ describe('common/dashboard/ItemComponent', () => {
     };
 
     // Act
-    const { getByTestId, getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
+    const { getByTestId } = renderWithRouter(
+      null,
       <>
+        <Route path="/" element={<ItemComponent {...props} />} />
         <Route
           path={props.item.linkTo}
           element={<h1>Test route destination</h1>}
@@ -62,12 +67,16 @@ describe('common/dashboard/ItemComponent', () => {
       </>
     );
 
-    const element = getByTestId(props.dataTestId);
+    // Debug
+    // screen.debug();
 
     // Assert
+    const element = getByTestId(props.dataTestId);
     expect(element).toHaveClass(props.classes.root);
-    expect(getByText(props.item.title)).toHaveClass(props.classes.title);
-    expect(getByText(props.item.subtitle)).toHaveClass(props.classes.subtitle);
+    const titleElement = screen.getByText(props.item.title);
+    expect(titleElement).toHaveClass(props.classes.title);
+    const subtitleElement = screen.getByText(props.item.subtitle);
+    expect(subtitleElement).toHaveClass(props.classes.subtitle);
   });
 
   it('should navigate to route when click on item component', () => {
@@ -90,8 +99,9 @@ describe('common/dashboard/ItemComponent', () => {
 
     // Act
     const { getByTestId, getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
+      null,
       <>
+        <Route path="/" element={<ItemComponent {...props} />} />
         <Route
           path={props.item.linkTo}
           element={<h1>Test route destination</h1>}
@@ -103,7 +113,6 @@ describe('common/dashboard/ItemComponent', () => {
     fireEvent.click(element);
 
     // Assert
-
     expect(getByText('Test route destination')).toBeInTheDocument();
   });
 });
