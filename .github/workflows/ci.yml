@@ -1,0 +1,40 @@
+name: CI Tests
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Install wait-on
+        run: npm install --save-dev wait-on
+
+      - name: Start dev server in background
+        run: |
+          npm run start:dev &
+          npx wait-on http://localhost:5173
+
+      - name: Run Cypress E2E tests
+        run: npm run cy:run
