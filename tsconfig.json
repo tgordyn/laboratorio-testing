@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "baseUrl": "./src/",
+    "types": ["vitest/globals"],
     "paths": {
       "#common/*": ["common/*"]
     }
