@@ -25,5 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run unit tests with with coverage
+      - name: Run unit tests with with Vitest coverage
         run: npm run test:coverage
+
+      - name: Install Cypress
+        run: npx cypress install
+
+      - name: Run Cypress E2E tests
+        run: npx cypress run
