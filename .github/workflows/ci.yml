@@ -1,4 +1,4 @@
-name: CI - Unit Tests
+name: CI Tests
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -25,13 +25,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run unit tests with with Vitest coverage
+      - name: Run unit tests with coverage
         run: npm run test:coverage
 
-      - name: Start app in background
+      - name: Install wait-on
+        run: npm install --save-dev wait-on
+
+      - name: Start dev server in background
         run: |
-          npm run dev &
+          npm run start:dev &
           npx wait-on http://localhost:5173
 
       - name: Run Cypress E2E tests
-        run: npx cypress run
+        run: npm run cy:run
