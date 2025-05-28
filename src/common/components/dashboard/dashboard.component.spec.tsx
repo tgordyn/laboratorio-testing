@@ -20,8 +20,9 @@ describe('common/DashboardComponent', () => {
 
     // Act
     const { getByText } = renderWithRouter(
-      <DashboardComponent {...props} />,
+      null,
       <>
+        <Route path="/" element={<DashboardComponent {...props} />} />
         <Route
           path={props.items[0].linkTo}
           element={<h1>Test route destination</h1>}
@@ -55,8 +56,9 @@ describe('common/DashboardComponent', () => {
 
     // Act
     const { getByTestId } = renderWithRouter(
-      <DashboardComponent {...props} />,
+      null,
       <>
+        <Route path="/" element={<DashboardComponent {...props} />} />
         <Route
           path={props.items[0].linkTo}
           element={<h1>Test route destination</h1>}
@@ -105,8 +107,9 @@ describe('common/DashboardComponent', () => {
 
     // Act
     const { getByText } = renderWithRouter(
-      <DashboardComponent {...props} />,
+      null,
       <>
+        <Route path="/" element={<DashboardComponent {...props} />} />
         <Route path={props.items[0].linkTo} element={<h1>Test route 1</h1>} />
         <Route path={props.items[1].linkTo} element={<h1>Test route 2</h1>} />
         <Route path={props.items[2].linkTo} element={<h1>Test route 3</h1>} />

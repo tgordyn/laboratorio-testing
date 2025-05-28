@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { HeaderGroup } from '@tanstack/react-table';
 import { render } from '@testing-library/react';
+import { Table } from '@mui/material';
 import { HeaderComponent } from './header.component';
+//import { vi } from 'vitest';
 
 describe('common/table/HeaderComponent', () => {
   it('should be rendered as expected passing required properties', () => {
-    // Arrange
     const props = {
       headerGroups: [
         {
           id: '1',
           headers: [
             {
+              id: 'header-1',
               column: {
                 columnDef: {
                   header: 'Test label',
@@ -24,21 +26,23 @@ describe('common/table/HeaderComponent', () => {
       ] as unknown as HeaderGroup<any>[],
     };
 
-    // Act
-    const { getByText } = render(<HeaderComponent {...props} />);
+    const { getByText } = render(
+      <Table>
+        <HeaderComponent {...props} />
+      </Table>
+    );
 
-    // Assert
     expect(getByText('Test label')).toBeInTheDocument();
   });
 
   it('should render two columns passing two columns', () => {
-    // Arrange
     const props = {
       headerGroups: [
         {
           id: '1',
           headers: [
             {
+              id: 'header-1',
               column: {
                 columnDef: {
                   header: 'Test label 1',
@@ -52,6 +56,7 @@ describe('common/table/HeaderComponent', () => {
           id: '2',
           headers: [
             {
+              id: 'header-2',
               column: {
                 columnDef: {
                   header: 'Test label 2',
@@ -64,10 +69,12 @@ describe('common/table/HeaderComponent', () => {
       ] as unknown as HeaderGroup<any>[],
     };
 
-    // Act
-    const { getByText } = render(<HeaderComponent {...props} />);
+    const { getByText } = render(
+      <Table>
+        <HeaderComponent {...props} />
+      </Table>
+    );
 
-    // Assert
     expect(getByText('Test label 1')).toBeInTheDocument();
     expect(getByText('Test label 2')).toBeInTheDocument();
   });
