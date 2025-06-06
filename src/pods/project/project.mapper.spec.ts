@@ -2,82 +2,122 @@ import {
   mapEmployeeSummaryFromApiToVm,
   mapEmployeeSummaryListFromApiToVm,
   mapProjectFromApiToVm,
-} from "./project.mapper";
-import * as apiModel from "./api/project.api-model";
-import * as viewModel from "./project.vm";
-import { mockEmployeeSummaryList, mockProject } from "./api/project.mock-data";
+} from './project.mapper';
+import * as apiModel from './api/project.api-model';
+import * as viewModel from './project.vm';
 
-import { mapToCollection } from "#common/mappers";
+describe('project.mapper', () => {
+  // Testea el map correcto de un solo EmployeeSummary desde API a VM
+  it('should map EmployeeSummary from API to VM correctly', () => {
+    const apiEmployee: apiModel.EmployeeSummary = {
+      id: '10',
+      employeeName: 'Carlos Díaz',
+      isAssigned: false,
+    };
 
-vi.mock("#common/mappers", () => ({
-  mapToCollection: vi.fn((array, mapper) => array.map(mapper)),
-}));
-
-describe("project.mapper", () => {
-  it("should map EmployeeSummary from API to VM correctly", () => {
-    // Arrange
-    const employeeSummary: apiModel.EmployeeSummary =
-      mockEmployeeSummaryList[0];
     const expected: viewModel.EmployeeSummary = {
-      id: "1",
-      employeeName: "Daniel Perez",
-      isAssigned: true,
+      id: '10',
+      employeeName: 'Carlos Díaz',
+      isAssigned: false,
     };
 
-    // Act
-    const result = mapEmployeeSummaryFromApiToVm(employeeSummary);
+    const result = mapEmployeeSummaryFromApiToVm(apiEmployee);
 
-    // Assert
     expect(result).toEqual(expected);
   });
 
-  it("should map EmployeeSummary list from API to VM correctly", () => {
-    // Arrange
-    const employeeSummaryList: apiModel.EmployeeSummary[] =
-      mockEmployeeSummaryList;
-    const expected: viewModel.EmployeeSummary[] = mockEmployeeSummaryList;
+  // Testea el map correcto de una lista de EmployeeSummary desde API a VM
+  it('should map EmployeeSummary list from API to VM correctly', () => {
+    const apiList: apiModel.EmployeeSummary[] = [
+      { id: '1', employeeName: 'Ana Torres', isAssigned: true },
+      { id: '2', employeeName: 'Luis Gómez', isAssigned: false },
+    ];
 
-    // Act
-    const result = mapEmployeeSummaryListFromApiToVm(employeeSummaryList);
+    const expected: viewModel.EmployeeSummary[] = [...apiList];
 
-    // Assert
+    const result = mapEmployeeSummaryListFromApiToVm(apiList);
+
     expect(result).toEqual(expected);
-
-    expect(vi.mocked(mapToCollection)).toHaveBeenCalledWith(
-      employeeSummaryList,
-      expect.any(Function)
-    );
   });
 
-  it("should map Project from API to VM correctly", () => {
-    // Arrange
-    const project: apiModel.Project = mockProject;
-    const expected: viewModel.Project = {
-      id: "1",
-      name: "Nombre",
-      externalId: "1234",
-      comments: "Comentario",
+  // Verifica que si la lista de empleados es null devuelva un array vacío
+  it('should return an empty array if employee list is null', () => {
+    const result = mapEmployeeSummaryListFromApiToVm(null);
+    expect(result).toEqual([]);
+  });
+
+  // Verifica que si la lista de empleados es undefined devuelva un array vacío
+  it('should return an empty array if employee list is undefined', () => {
+    const result = mapEmployeeSummaryListFromApiToVm(undefined);
+    expect(result).toEqual([]);
+  });
+
+  // Valida que un Project completo desde API se mapea correctamente a VM
+  it('should map Project from API to VM correctly', () => {
+    const apiProject: apiModel.Project = {
+      id: '1',
+      name: 'Proyecto A',
+      externalId: 'EXT-001',
+      comments: 'Sin comentarios',
       isActive: true,
-      employees: mockEmployeeSummaryList,
+      employees: [
+        { id: '1', employeeName: 'Luis Gómez', isAssigned: true },
+      ],
     };
 
-    // Act
-    const result = mapProjectFromApiToVm(project);
+    const expected: viewModel.Project = {
+      ...apiProject,
+    };
 
-    // Assert
+    const result = mapProjectFromApiToVm(apiProject);
+
     expect(result).toEqual(expected);
   });
 
-  it("should return empty Project when API project is null or undefined", () => {
-    // Arrange
-    const expected = viewModel.createEmptyProject();
+  // Verifica que se devuelva un proyecto vacío si se pasa null
+  it('should return empty Project when API project is null', () => {
+    const result = mapProjectFromApiToVm(null);
+    expect(result).toEqual(viewModel.createEmptyProject());
+  });
 
-    // Act
-    const result1 = mapProjectFromApiToVm(null);
-    const result2 = mapProjectFromApiToVm(undefined);
+  // Verifica que se devuelva un proyecto vacío si se pasa undefined
+  it('should return empty Project when API project is undefined', () => {
+    const result = mapProjectFromApiToVm(undefined);
+    expect(result).toEqual(viewModel.createEmptyProject());
+  });
 
-    // Assert
-    expect(result1).toEqual(expected);
-    expect(result2).toEqual(expected);
+  // Verifica que mapProjectFromApiToVm no tire errores y devuelva un objeto válido con el resto de las propiedades cuando el campo employees es null
+  it('should handle null employees field correctly', () => {
+    const nullEmployees: apiModel.Project = {
+      id: '1',
+      name: 'Test',
+      isActive: true,
+      comments: '',
+      externalId: '',
+      employees: null,
+    };
+
+    const result = mapProjectFromApiToVm(nullEmployees);
+
+    expect(result.employees).toEqual([]);
+    expect(result.id).toBe('1');
+    expect(result.name).toBe('Test');
+  });
+
+  // Verifica que mapProjectFromApiToVm no tire errores y devuelva un objeto válido con el resto de las propiedades cuando el campo employees es undefined
+  it('should handle undefined employees field correctly', () => {
+    const undefinedEmployees: apiModel.Project = {
+      id: '1',
+      name: 'Test',
+      isActive: true,
+      comments: '',
+      externalId: '',
+      employees: undefined,
+    };
+
+    const result = mapProjectFromApiToVm(undefinedEmployees);
+
+    expect(result.employees).toEqual([]);
+    expect(result.isActive).toBe(true);
   });
 });
