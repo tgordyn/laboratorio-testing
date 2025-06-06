@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
+import { Table, TableBody, TableRow } from '@mui/material';
 import { CellComponent } from './cell.component';
 
 describe('common/table/CellComponent', () => {
@@ -8,9 +9,15 @@ describe('common/table/CellComponent', () => {
 
     // Act
     const { getByText } = render(
-      <CellComponent>
-        <h1>Test content</h1>
-      </CellComponent>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <CellComponent>
+              <h1>Test content</h1>
+            </CellComponent>
+          </TableRow>
+        </TableBody>
+      </Table>
     );
 
     // Assert

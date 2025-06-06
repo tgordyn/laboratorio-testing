@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
+import { Table, TableBody } from '@mui/material';
 import { RowComponent } from './row.component';
 
 describe('common/table/RowComponent', () => {
@@ -12,9 +13,13 @@ describe('common/table/RowComponent', () => {
 
     // Act
     const { getByText, getByTestId } = render(
-      <RowComponent {...props}>
-        <td>{'Test rowData'}</td>
-      </RowComponent>
+      <Table>
+        <TableBody>
+          <RowComponent {...props}>
+            <td>{'Test rowData'}</td>
+          </RowComponent>
+        </TableBody>
+      </Table>
     );
 
     // Assert
@@ -30,10 +35,14 @@ describe('common/table/RowComponent', () => {
 
     // Act
     const { getByText } = render(
-      <RowComponent {...props}>
-        <td>{'Test rowData 1'}</td>
-        <td>{'Test rowData 2'}</td>
-      </RowComponent>
+      <Table>
+        <TableBody>
+          <RowComponent {...props}>
+            <td>{'Test rowData 1'}</td>
+            <td>{'Test rowData 2'}</td>
+          </RowComponent>
+        </TableBody>
+      </Table>
     );
 
     // Assert

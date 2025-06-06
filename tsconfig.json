@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "baseUrl": "./src/",
     "paths": {
-      "#*": ["*"]
+      "#common/*": ["common/*"]
     }
   },
   "include": [
